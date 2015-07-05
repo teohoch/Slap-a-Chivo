@@ -1,0 +1,37 @@
+{
+    "settings" :
+    {
+        "number_of_shards" : 10,
+        "number_of_replicas"  : 0
+    },
+    "mappings" :
+    {
+        "line" :
+        {
+            "properties" :
+            {
+                "Species"               :   {"type" : "string"},
+                "Chemical Name"         :   {"type" : "string"},
+                "Freq-MHz"              :   {"type" : "double"},
+                "Freq Err"              :   {"type" : "double"},
+                "Meas Freq-MHz"         :   {"type" : "double"},
+                "Meas Freq Err"         :   {"type" : "double"},
+                "Resolved QNs"          :   {"type" : "string"},
+                "CDMS/JPL Intensity"    :   {"type" : "double"},
+                "Sijmu2"                :   {"type" : "double"},
+                "Sij"                   :   {"type" : "double"},
+                "Log10(Aij)"            :   {"type" : "double"},
+                "Lovas/AST Intensity"   :   {"type" : "string"},
+                "E_L (cm^-1)"           :   {"type" : "double"},
+                "E_L (K)"               :   {"type" : "double"},
+                "E_U (cm^-1)"           :   {"type" : "double"},
+                "E_U (K)"               :   {"type" : "double"},
+                "Linelist"              :   {"type" : "string"}
+            }
+        }
+    }
+}
+
+
+        
+        
