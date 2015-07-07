@@ -209,6 +209,8 @@ class ElasticSearchLoader():
         if self.__server_connection.indices.exists(index_to_lower) and not self.__server_connection.indices.get_mapping(index_to_lower, mapping_name):
                 self.__server_connection.indices.put_mapping(mapping_name, mapping_options, index_to_lower)
 
+    #TODO Generate the mappings from the header in the CSV File
+
 
 if __name__ == "__main__":
     loader = ElasticSearchLoader()
