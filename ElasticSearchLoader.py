@@ -135,14 +135,11 @@ class ElasticSearchLoader():
                 fails = {"1": ["connection", []], "2": ["malformed", []], "3": ["other", []]}
                 with open(filename) as csvfile:
                     data = csv.reader(csvfile, delimiter=delimiter)
-                    first = True
+                    next(data)
                     for row in data:
-                        if first:
-                            first = False
-                        else:
-                            success = self.__upload_line(row, index, mapping, retries)
-                            if success != 0:
-                                fails[str(success)][1].append(row)
+                        success = self.__upload_line(row, index, mapping, retries)
+                        if success != 0:
+                            fails[str(success)][1].append(row)
 
                 for key, value in fails.iteritems():
                     if len(value[1]) > 0:
@@ -209,15 +206,23 @@ class ElasticSearchLoader():
         if self.__server_connection.indices.exists(index_to_lower) and not self.__server_connection.indices.get_mapping(index_to_lower, mapping_name):
                 self.__server_connection.indices.put_mapping(mapping_name, mapping_options, index_to_lower)
 
-    #TODO Generate the mappings from the header in the CSV File
+    def generate_mapping(self, filename, delimiter=":"):
+        with open(filename) as csvfile:
+            data = csv.reader(csvfile, delimiter=delimiter)
+            header = next(data)
+        print(header)
+
+
+    # TODO Generate the mappings from the header in the CSV File
 
 
 if __name__ == "__main__":
     loader = ElasticSearchLoader()
-    index_options = {"settings": {"number_of_shards": 10, "number_of_replicas": 2}}
-    mapping_options = {"properties": {"CDMS/JPL Intensity": {"type": "double"},"Chemical Name": {"type": "string"}, "Freq-MHz": {"type": "double"}, "Meas Freq-MHz": { "type": "double" }, "Species": {"type": "string"}}}
-    loader.create_index("Test", index_options)
-    loader.create_mapping("Test", "DUmmy",mapping_options)
+    # index_options = {"settings": {"number_of_shards": 10, "number_of_replicas": 2}}
+    # mapping_options = {"properties": {"CDMS/JPL Intensity": {"type": "double"},"Chemical Name": {"type": "string"}, "Freq-MHz": {"type": "double"}, "Meas Freq-MHz": { "type": "double" }, "Species": {"type": "string"}}}
+    # loader.create_index("Test", index_options)
+    # loader.create_mapping("Test", "DUmmy",mapping_options)
+    loader.generate_mapping("splatalogue 0-500000.csv")
 
 
 
