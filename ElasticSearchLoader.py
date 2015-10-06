@@ -209,6 +209,10 @@ class ElasticSearchLoader():
         if self.__server_connection.indices.exists(index_to_lower) and not self.__server_connection.indices.get_mapping(index_to_lower, mapping_name):
                 self.__server_connection.indices.put_mapping(mapping_name, mapping_options, index_to_lower)
 
+    def create_mapping_options_from_csv(self,csv_filename):
+        pass
+
+
     #TODO Generate the mappings from the header in the CSV File
 
 
