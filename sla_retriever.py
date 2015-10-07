@@ -10,6 +10,8 @@ class SlaGetter():
     del Splatalogue.data["no_potential"]
     del Splatalogue.data["no_probable"]
 
+
+
     def getLines(self,lower, upper, location):
         print("Downloading From "+ str(lower) + " to " + str(upper))
         lines = Splatalogue.query_lines_async(
@@ -64,10 +66,10 @@ for i in range(47, 100000):
 '''
 Container = ["","","",""]
 g = SlaGetter()
-t1 = threading.Thread(target=g.getLines,args=(0 * u.GHz,470 * u.GHz,0))
-t2 = threading.Thread(target=g.getLines,args=(470 * u.GHz,1000 * u.GHz,1))
-t3 = threading.Thread(target=g.getLines,args=(1000 * u.GHz,1500 * u.GHz,2))
-t4 = threading.Thread(target=g.getLines,args=(1500 * u.GHz,1000000* u.THz,3))
+t1 = threading.Thread(target=g.getLines,args=(0 * u.MHz,470000 * u.MHz,0))
+t2 = threading.Thread(target=g.getLines,args=(470000 * u.MHz,1000000 * u.MHz,1))
+t3 = threading.Thread(target=g.getLines,args=(1000000 * u.MHz,1500000 * u.MHz,2))
+t4 = threading.Thread(target=g.getLines,args=(1500000 * u.MHz,1000000000000* u.MHz,3))
 
 t1.start()
 t2.start()
