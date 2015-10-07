@@ -6,6 +6,8 @@ import os
 from time import sleep
 from datetime import datetime
 from astropy import units as u
+import sys
+import time
 
 
 class ElasticSearchLoader():
@@ -27,6 +29,7 @@ class ElasticSearchLoader():
         self.__default_index = None
         self.__default_mapping = None
         self.fail_directory = fail_directory
+        self.__number_uploaded = 0
         self.index_json = '{' \
                           '    "settings" :' \
                           '    {' \
@@ -73,17 +76,18 @@ class ElasticSearchLoader():
         :rtype: int
         """
         success = 3
+        #print("Uploading " + str(data[0]) + " " + str(data[2]) + " " + str(data[3]) + " " + str(data[5]))
         if len(data) >= 25:
             try:
                 freq = float(data[3]) if data[3] else float(data[5])
-                freq_error = float(data[4]) if data[4] else float(data[6])
+                freq_error = float(data[4]) if data[4] else (float(data[6]) if data[6] else None)
                 wavelenght = float(((freq * u.MHz).to(u.m, equivalencies=u.spectral()))/u.m)
                 line = {
                     "Species"                       : data[0],
                     "NRAO Recommended"              : (data[1] =="*"),
                     "Chemical Name"                 : data[2],
                     "Calculated Freq"               : float(data[3]) if data[3] else None,
-                    "Calculated Freq"               : float(data[4]) if data[4] else None,
+                    "Calculated Freq Err"               : float(data[4]) if data[4] else None,
                     "Meas Freq"                 : float(data[5]) if data[5] else None,
                     "Meas Freq Err"                 : float(data[6]) if data[6] else None,
                     "Resolved QNs"                  : data[7],
@@ -92,7 +96,7 @@ class ElasticSearchLoader():
                     "Sijmu2"                        : float(data[10]) if data[10] else None,
                     "Sij"                           : float(data[11]) if data[11] else None,
                     "Log10(Aij)"                    : float(data[12]) if data[12] else None,
-                    "Lovas/AST Intensity"           : float(data[13]) if data[13] else None,
+                    "Lovas/AST Intensity"           : data[13],
                     "E_L (cm^-1)"                   : float(data[14]) if data[14] else None,
                     "E_L (K)"                       : float(data[15]) if data[15] else None,
                     "E_U (cm^-1)"                   : float(data[16]) if data[16] else None,
@@ -115,17 +119,21 @@ class ElasticSearchLoader():
                     try:
                         self.__server_connection.create(index, mapping, json.dumps(line))
                         success = 0
-                    except (elasticsearch.ConnectionError, elasticsearch.ConnectionTimeout,
-                            elasticsearch.ElasticsearchException), ese:
+                        self.__number_uploaded = self.__number_uploaded +1
+                        break
+
+                    except (elasticsearch.ConnectionError, elasticsearch.ConnectionTimeout, elasticsearch.ElasticsearchException), ese:
                         try_count += 1
                         if try_count == retries:
-                            print("Could not Upload DataLine, after " + retries + "retries => " + str(data))
+                            print("Could not Upload DataLine, after " + str(retries) + "retries => " + str(data))
                             print(ese)
                             success = 1
+
                         else:
                             sleep(1 * try_count)
             except Exception as e:
                 print "Error in Data Line -> " + str(data)
+                print e
                 success = 2
         else:
             print "DataLine is malformed -> " + str(data)
@@ -163,11 +171,11 @@ class ElasticSearchLoader():
 
                 for key, value in fails.iteritems():
                     if len(value[1]) > 0:
-                        fail_file = os.path.join(self.fail_directory,
-                                                 "Fail-" + filename.split("/")[-1] + "-" + value[0] + " " + time)
-                        with open(fail_file, "w") as f:
-                            for row in value[1]:
-                                f.write(row)
+                        fail_file = os.path.join(self.fail_directory, "Fail-" + filename.split("/")[-1] + "-" + value[0] + " " + time)
+                        if len(value[1])>0:
+                            with open(fail_file, "w") as f:
+                                for row in value[1]:
+                                    f.write(row)
             else:
                 raise elasticsearch.ConnectionError("The selected index or mapping doesn't exist!")
         else:
@@ -237,7 +245,7 @@ class ElasticSearchLoader():
 
 
 if __name__ == "__main__":
-    loader = ElasticSearchLoader(elastic_server="http://otto.csrg.cl:9200/")
+    loader = ElasticSearchLoader(elastic_server="http://patino.csrg.inf.utfsm.cl:9200/")
     index_options = {"settings": {"number_of_shards": 10, "number_of_replicas": 1}}
     mapping_options = \
     {"properties":
@@ -251,11 +259,11 @@ if __name__ == "__main__":
         "Meas Freq Err"                     :   {"type":"double"},
         "Resolved QNs"                      :   {"type":"string"},
         "Unresolved Quantum Numbers"        :   {"type":"string"},
-        "CDMS/JPL Intensity"                :   {"type":"double"},
+        "CDMS/JPL Intensity"                :   {"type":"string"},
         "Sijmu2"                            :	{"type":"double"},
         "Sij"                               :   {"type":"double"},
         "Log10(Aij)"                        :   {"type":"double"},
-        "Lovas/AST Intensity"               :   {"type":"double"},
+        "Lovas/AST Intensity"               :   {"type":"string"},
         "E_L(cm^-1)"                        :   {"type":"double"},
         "E_L(K)"                            :   {"type":"double"},
         "E_U(cm^-1)"                        :   {"type":"double"},
