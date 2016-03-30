@@ -30,39 +30,7 @@ class ElasticSearchLoader():
         self.__default_mapping = None
         self.fail_directory = fail_directory
         self.__number_uploaded = 0
-        self.index_json = '{' \
-                          '    "settings" :' \
-                          '    {' \
-                          '        "number_of_shards" : 10,' \
-                          '        "number_of_replicas"  : 2' \
-                          '    },' \
-                          '    "mappings" :' \
-                          '    {' \
-                          '        "line" :' \
-                          '        {' \
-                          '            "properties" :' \
-                          '            {' \
-                          '                "Species"               :   {"type" : "string"},' \
-                          '                "Chemical Name"         :   {"type" : "string"},' \
-                          '                "Freq-MHz"              :   {"type" : "double"},' \
-                          '                "Freq Err"              :   {"type" : "double"},' \
-                          '                "Meas Freq-MHz"         :   {"type" : "double"},' \
-                          '                "Meas Freq Err"         :   {"type" : "double"},' \
-                          '                "Resolved QNs"          :   {"type" : "string"},' \
-                          '                "CDMS/JPL Intensity"    :   {"type" : "double"},' \
-                          '                "Sijmu2"                :   {"type" : "double"},' \
-                          '                "Sij"                   :   {"type" : "double"},' \
-                          '                "Log10(Aij)"            :   {"type" : "double"},' \
-                          '                "Lovas/AST Intensity"   :   {"type" : "string"},' \
-                          '                "E_L (cm^-1)"           :   {"type" : "double"},' \
-                          '                "E_L (K)"               :   {"type" : "double"},' \
-                          '                "E_U (cm^-1)"           :   {"type" : "double"},' \
-                          '                "E_U (K)"               :   {"type" : "double"},' \
-                          '                "Linelist"              :   {"type" : "string"}' \
-                          '            }' \
-                          '        }' \
-                          '    }' \
-                          '}'
+
 
     def __upload_line(self, data, index, mapping, retries=10,):
         """
@@ -83,6 +51,7 @@ class ElasticSearchLoader():
                 freq_error = float(data[4]) if data[4] else (float(data[6]) if data[6] else None)
                 wavelenght = float(((freq * u.MHz).to(u.m, equivalencies=u.spectral()))/u.m)
                 line = {
+					"Title"							: data[22] + ": " + data[0] +"  "+ data[7],
                     "Species"                       : data[0],
                     "NRAO Recommended"              : (data[1] =="*"),
                     "Chemical Name"                 : data[2],
@@ -250,6 +219,9 @@ if __name__ == "__main__":
     mapping_options = \
     {"properties":
         {
+        "Title"								:	{"type" : "string",
+						"fields": {
+        							"raw":   { "type": "string", "index": "not_analyzed" } }},
         "Species"                           :   {"type" : "string",
 						"fields": {
         							"raw":   { "type": "string", "index": "not_analyzed" } }},
