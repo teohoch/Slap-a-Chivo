@@ -1,7 +1,7 @@
 {
   "query" : {
     "range" : {
-        "Freq-MHz" : {
+        "Frequency" : {
             "gte" : 1901673.0,
             "lte" : 1901675.0
         }
