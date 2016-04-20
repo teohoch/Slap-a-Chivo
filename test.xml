@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Produced with astropy.io.votable version 1.0.6
+     http://www.astropy.org/ -->
+<VOTABLE version="1.1" xmlns="http://www.ivoa.net/xml/VOTable/v1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ivoa.net/xml/VOTable/v1.1">
+ <RESOURCE type="results">
+  <DESCRIPTION>
+   Splatalogue SLAP Service
+  </DESCRIPTION>
+  <INFO ID="QUERY_STATUS" name="QUERY_STATUS" value="OK"/>
+  <INFO ID="dbName" name="dbName" value="splat"/>
+  <INFO ID="tableName" name="tableName"/>
+  <INFO ID="REQUEST" name="REQUEST" value="queryData"/>
+  <INFO ID="WAVELENGTH" name="WAVELENGTH" value="0.01"/>
+  <INFO ID="ServiceEngine" name="ServiceEngine" value="slap: SLAP version 1.0 DALServer version 0.3"/>
+  <INFO ID="TableRows" name="TableRows" value="0"/>
+  <TABLE nrows="0">
+   <FIELD ID="title" arraysize="*" datatype="char" name="title" ucd="em.line" utype="ssldm:Line.title">
+    <DESCRIPTION>
+     small description identifying the line
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="catname" arraysize="*" datatype="char" name="catalog name" ucd="meta.id;meta.table">
+    <DESCRIPTION>
+     The name of the line catalog this entry was drawn from.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="wavelength" datatype="double" name="wavelength" ucd="em.wl" unit="m" utype="ssldm:Line.wavelength.value">
+    <DESCRIPTION>
+     the wavelength in the vacuum of the transition originating the
+     line
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="frequency" datatype="double" name="frequency" ucd="em.freq;spect.line" unit="MHz">
+    <DESCRIPTION>
+     The frequency for this line.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="molformula" arraysize="*" datatype="char" name="molecular formula" ucd="phys.atmol.element" utype="ssldm:Line.initialElement.name">
+    <DESCRIPTION>
+     The molecular formula which may include notation of the common
+     quantum state of the transition.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="chemicalname" arraysize="*" datatype="char" name="chemicalname" ucd="phys.atmol.element" utype="ssldm:Line.species.name">
+    <DESCRIPTION>
+     Actual chemical name of the species
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="molformula_noparens" arraysize="*" datatype="char" name="molformula_noparens" ucd="phys.atmol.element" utype="ssldm:Line.initialElementNP.name">
+    <DESCRIPTION>
+     The molecular formula which may include notation of the common
+     quantum state of the transition WITHOUT parentheses.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="moltype" datatype="int" name="molecule type">
+    <DESCRIPTION>
+     The type of molecule given as an integer identifier.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="sijmu2" datatype="double" name="sijmu2">
+    <DESCRIPTION>
+     sijmu2.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="aij" datatype="double" name="aij" utype="ssldm:Line.einsteinA">
+    <DESCRIPTION>
+     Einstein coefficient
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="lowerstateenergy" datatype="double" name="lowerstateenergy">
+    <DESCRIPTION>
+     Lower state energy
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="upperstateenergy" datatype="double" name="upperstateenergy" utype="ssldm:Line.initialLevel.energy">
+    <DESCRIPTION>
+     Upper state energy
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="lowerstateenergyK" datatype="double" name="lowerstateenergyK">
+    <DESCRIPTION>
+     Lower state energy in Kelvin
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="upperstateenergyK" datatype="double" name="upperstateenergyK">
+    <DESCRIPTION>
+     Upper state energy in Kelvin
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="recommended" datatype="int" name="frequency recommended">
+    <DESCRIPTION>
+     An integer flag indicating whether this record provides the
+     recommended frequency for this line.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="QNs" arraysize="*" datatype="char" name="quantum numbers" ucd="phys.atmol.transition;spect.line">
+    <DESCRIPTION>
+     The initial and final quantum number states that produces this
+     line.
+    </DESCRIPTION>
+   </FIELD>
+   <FIELD ID="known_interstellar" datatype="boolean" name="known_interstellar">
+    <DESCRIPTION>
+     Known interstellar species
+    </DESCRIPTION>
+   </FIELD>
+   <GROUP ID="Line" name="Line" utype="ssldm:Line">
+    <DESCRIPTION>
+     a description of the spectral line
+    </DESCRIPTION>
+    <FIELDref ref="title"/>
+    <FIELDref ref="wavelength"/>
+   </GROUP>
+  </TABLE>
+ </RESOURCE>
+</VOTABLE>

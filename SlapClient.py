@@ -1,5 +1,8 @@
 import requests
+from astropy.io import votable
+from astropy.io.votable.tree import VOTableFile, Resource, Table, Field, Info
 
+import StringIO
 __author__ = "teohoch"
 
 
@@ -18,12 +21,12 @@ class SlapClient():
 	def query(self, **kwargs):
 		query_params = {#"VERSION"	:	self.__slap_version,
 						"REQUEST"	:	"queryData"}
-		if "find.nrao.edu" in self.__slap_service:
-			query_params["VERB"] = 3
+		#if "find.nrao.edu" in self.__slap_service:
+		#	query_params["VERB"] = 3
 		valid = False
 
 		for constrain_name, constrain in kwargs.iteritems():
-			if constrain_name.lower() == "wavelenght":
+			if constrain_name.lower() == "wavelength":
 				valid = True
 
 			if isinstance(constrain, dict): #range
@@ -34,8 +37,9 @@ class SlapClient():
 				query_params[constrain_name.upper()] = self.__equality(constrain)
 		if valid:
 			request = requests.get(self.__slap_service, params=query_params)
-			print (request.url)
-			return request.text
+			temp = StringIO.StringIO()
+			temp.write(request.text)
+			return votable.parse(temp)
 		else:
 			raise ValueError("The query is not valid according to the SLA Protocol")
 
@@ -51,7 +55,7 @@ class SlapClient():
 if __name__ == "__main__":
 	service = "https://find.nrao.edu/splata-slap/slap"
 	client = SlapClient(service)
-	data = client.query(wavelenght=0.010)
-	print data
+	data = client.query(WAVELENGTH=0.010)
+	data.to_xml("test.xml")
 
 
