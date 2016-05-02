@@ -1,11 +1,17 @@
 import requests
 from astropy.io import votable
+from astropy import units as u
 import re
-from astropy.io.votable.tree import VOTableFile, Resource, Table, Field, Info
+
 
 import StringIO
 
 __author__ = "teohoch"
+
+def _check(par,default):
+   if not isinstance(par, u.Quantity):
+      par=par*default
+   return par
 
 
 class SlapClient(object):
@@ -29,22 +35,58 @@ class SlapClient(object):
             raise ValueError("The query is not valid according to the SLA Protocol")
 
     @classmethod
+    def chemical_query(cls, service, chemical_name, minimum=None, maximum=None, slap_version=1.0):
+        '''
+        Class method used to get all the spectral lines concerning to a certain chemical, within a spectral range
+        :param service: String. The Slap service to use
+        :param chemical_name: String. The chemical in questio to search for
+        :param minimum: Number. Lower limit for the spectral range. If astropy units are not used, it will assume the limit is in Hz
+        :param maximum: Number. Upper limit for the spectral range. If astropy units are not used, it will assume the limit is in Hz
+        :param slap_version: Number. The SLAP version to use. Defaults to 1.0
+        :return:
+        '''
+        wave = dict()
+        min_temporal = min_final = None
+        max_temporal = max_final = None
+
+        if minimum:
+            min_temporal = ((_check(minimum, u.Hz)).to(u.m, equivalencies=u.spectral())).value
+        if maximum:
+            max_temporal = ((_check(maximum, u.Hz)).to(u.m, equivalencies=u.spectral())).value
+        if max_temporal and min_temporal:
+            max_final = max_temporal if (max_temporal>=min_temporal) else min_temporal
+            min_final = max_temporal if (max_temporal>=min_temporal) else min_temporal
+            wave["lte"] = str(max_final)
+            wave["gte"] = str(min_final)
+        elif max_temporal:
+            max_final = max_temporal if (max_temporal >= min_temporal) else min_temporal
+            wave["lte"] = str(max_final)
+        elif min_temporal:
+            min_final = max_temporal if (max_temporal >= min_temporal) else min_temporal
+            wave["gte"] = str(min_final)
+        else:
+            raise ValueError("Either the minimum, the maximum or both must be valid for the query to be valid")
+
+
+
+        return cls.query(service,chemical_name,slap_version=slap_version, wavelenght=wave, chemical_name=chemical_name)
+
+    @classmethod
     def __parser(cls, slap_version, parameters):
 
         query_params = {"VERSION": slap_version,
                         "REQUEST": "queryData"}
 
         for constrain_name, constrain in parameters.iteritems():
-
             if constrain_name.lower() == "wavelength":
                 valid = True
-
             if isinstance(constrain, dict):  # range
-                pass
+                query_params[constrain_name.upper()] = cls.__range(constrain)
             elif isinstance(constrain, list):  # list of constrains
-                pass
+                query_params[constrain_name.upper()] = cls.__list(constrain)
             else:  # equality
                 query_params[constrain_name.upper()] = cls.__equality(constrain)
+
         return query_params if valid else None
 
     def query_service(self,**kwargs):
@@ -82,18 +124,36 @@ class SlapClient(object):
             print dict_field
         return a
 
-
     @staticmethod
     def __range(params):
-        pass
+        gte = params.has_key("gte")
+        lte = params.has_key("lte")
+        if gte and lte:
+            return str(params["gte"]) +"/"+str(params["lte"])
+        elif gte:
+            return str(params["gte"]) + "/"
+        elif lte:
+            return "/" + str(params["lte"])
+        else:
+            raise ValueError("The Range dictionary must contain eithe 'gte' (greater than equal),"
+                             " 'lte' (lower than equal), or both")
 
     @staticmethod
     def __equality(params):
-        return params
+        return str(params)
 
-    @staticmethod
-    def __list(params):
-        pass
+    @classmethod
+    def __list(cls, params):
+        output = []
+        for constrain in params:
+            if isinstance(constrain, dict):  # range
+                output.append(cls.__range(constrain))
+            elif isinstance(constrain, list):  # list of constrains
+                raise ValueError("Invalid list within list detected")
+            else:  # equality
+               output.append(cls.__equality(constrain))
+        return ",".join(output)
+
 
 
 if __name__ == "__main__":
