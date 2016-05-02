@@ -57,15 +57,31 @@ class SlapClient(object):
         return votable.parse(temp)
 
     def query_fields(self):
+        '''
+        Returns the fields (columns) returned by the SLAP Service for an standard query
+        :return: A list of dictionaries, each one containing the information of one field.
+        Common keys of these dictionaries are "name", description, "ID"
+        '''
         basic = SlapClient.query(self.__slap_service,self.__slap_version, wavelength=1.0)  # Splatalogue can't deal with wavelenght == 0 XD!
         # Use Regex <FIELD (.*?)>.*?<DESCRIPTION>(.*?)<\/DESCRIPTION>.*?<\/FIELD>
         # https://regex101.com/r/pL7pY1/1
         p = re.compile(ur'<FIELD (.*?)>.*?<DESCRIPTION>(.*?)<\/DESCRIPTION>.*?<\/FIELD>', re.UNICODE | re.DOTALL)
-        subst = u""
+
+        # Use Regex (.*?)="(.*?)".*?
+        # https://regex101.com/r/qW8iX8/1
+        p2 = re.compile(ur'(.*?)="(.*?)".*?', re.UNICODE | re.DOTALL)
+
 
         result = re.findall(p, basic)
+        fields = map(lambda s: [re.findall(p2,s[0]), s[1]],result)
+        a = list()
+        for i in fields:
+            dict_field =(dict((x[0],x[1]) for x in i[0]))
+            dict_field.update({"description" : i[1]})
+            a.append(dict_field)
+            print dict_field
+        return a
 
-        return result
 
     @staticmethod
     def __range(params):
