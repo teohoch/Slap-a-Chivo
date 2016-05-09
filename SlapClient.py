@@ -35,11 +35,14 @@ class SlapClient(object):
             raise ValueError("The query is not valid according to the SLA Protocol")
 
     @classmethod
-    def chemical_query(cls, service, chemical_name, minimum=None, maximum=None, slap_version=1.0):
+    def chemical_query(cls, service, chemical_element, minimum=None, maximum=None, slap_version=1.0):
         '''
         Class method used to get all the spectral lines concerning to a certain chemical, within a spectral range
+        Take into consideration that constraining results by Chemical Element is not a requirement of the SLAP protocol,
+        so use discretion. The splatalogue and Slap-a-Chivo services nevertheless support this feature.
+
         :param service: String. The Slap service to use
-        :param chemical_name: String. The chemical in questio to search for
+        :param chemical_element: String. The chemical/s in question to search for.
         :param minimum: Number. Lower limit for the spectral range. If astropy units are not used, it will assume the limit is in Hz
         :param maximum: Number. Upper limit for the spectral range. If astropy units are not used, it will assume the limit is in Hz
         :param slap_version: Number. The SLAP version to use. Defaults to 1.0
@@ -67,9 +70,7 @@ class SlapClient(object):
         else:
             raise ValueError("Either the minimum, the maximum or both must be valid for the query to be valid")
 
-
-
-        return cls.query(service,chemical_name,slap_version=slap_version, wavelenght=wave, chemical_name=chemical_name)
+        return cls.query(service, chemical_element, slap_version=slap_version, wavelenght=wave, CHEMICAL_ELEMENT=chemical_element)
 
     @classmethod
     def __parser(cls, slap_version, parameters):

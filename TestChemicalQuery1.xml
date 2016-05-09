@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd"
+ version="1.1">
+<RESOURCE type="results">
+<DESCRIPTION>Splatalogue SLAP Service</DESCRIPTION>
+<INFO name="QUERY_STATUS" value="OK"/>
+<INFO name="dbName" value="splat"/>
+<INFO name="tableName"/>
+<INFO name="REQUEST" value="queryData"/>
+<INFO name="WAVELENGTH" value="0.00260075/0.00260080"/>
+<INFO name="CHEMICAL_ELEMENT" value="FeCO"/>
+<INFO name="ServiceEngine" value="slap: SLAP version 1.0 DALServer version 0.3"/>
+<INFO name="TableRows" value="1"/>
+<TABLE>
+<FIELD ID="title" name="title" datatype="char" ucd="em.line" utype="ssldm:Line.title" arraysize="*">
+<DESCRIPTION>small description identifying the line</DESCRIPTION>
+</FIELD>
+<FIELD ID="catname" name="catalog name" datatype="char" ucd="meta.id;meta.table" arraysize="*">
+<DESCRIPTION>The name of the line catalog this entry was drawn from.</DESCRIPTION>
+</FIELD>
+<FIELD ID="wavelength" name="wavelength" datatype="double" ucd="em.wl" utype="ssldm:Line.wavelength.value" unit="m">
+<DESCRIPTION>the wavelength in the vacuum of the transition originating the line</DESCRIPTION>
+</FIELD>
+<FIELD ID="frequency" name="frequency" datatype="double" ucd="em.freq;spect.line" unit="MHz">
+<DESCRIPTION>The frequency for this line.</DESCRIPTION>
+</FIELD>
+<FIELD ID="molformula" name="molecular formula" datatype="char" ucd="phys.atmol.element" utype="ssldm:Line.initialElement.name" arraysize="*">
+<DESCRIPTION>The molecular formula which may include notation of the common quantum state of the transition.</DESCRIPTION>
+</FIELD>
+<FIELD ID="chemicalname" name="chemicalname" datatype="char" ucd="phys.atmol.element" utype="ssldm:Line.species.name" arraysize="*">
+<DESCRIPTION>Actual chemical name of the species</DESCRIPTION>
+</FIELD>
+<FIELD ID="molformula_noparens" name="molformula_noparens" datatype="char" ucd="phys.atmol.element" utype="ssldm:Line.initialElementNP.name" arraysize="*">
+<DESCRIPTION>The molecular formula which may include notation of the common quantum state of the transition WITHOUT parentheses.</DESCRIPTION>
+</FIELD>
+<FIELD ID="moltype" name="molecule type" datatype="int">
+<DESCRIPTION>The type of molecule given as an integer identifier.</DESCRIPTION>
+</FIELD>
+<FIELD ID="sijmu2" name="sijmu2" datatype="double">
+<DESCRIPTION>sijmu2.</DESCRIPTION>
+</FIELD>
+<FIELD ID="aij" name="aij" datatype="double" utype="ssldm:Line.einsteinA">
+<DESCRIPTION>Einstein coefficient</DESCRIPTION>
+</FIELD>
+<FIELD ID="lowerstateenergy" name="lowerstateenergy" datatype="double">
+<DESCRIPTION>Lower state energy</DESCRIPTION>
+</FIELD>
+<FIELD ID="upperstateenergy" name="upperstateenergy" datatype="double" utype="ssldm:Line.initialLevel.energy">
+<DESCRIPTION>Upper state energy</DESCRIPTION>
+</FIELD>
+<FIELD ID="lowerstateenergyK" name="lowerstateenergyK" datatype="double">
+<DESCRIPTION>Lower state energy in Kelvin</DESCRIPTION>
+</FIELD>
+<FIELD ID="upperstateenergyK" name="upperstateenergyK" datatype="double">
+<DESCRIPTION>Upper state energy in Kelvin</DESCRIPTION>
+</FIELD>
+<FIELD ID="recommended" name="frequency recommended" datatype="int">
+<DESCRIPTION>An integer flag indicating whether this record provides the recommended frequency for this line.</DESCRIPTION>
+</FIELD>
+<FIELD ID="QNs" name="quantum numbers" datatype="char" ucd="phys.atmol.transition;spect.line" arraysize="*">
+<DESCRIPTION>The initial and final quantum number states that produces this line.</DESCRIPTION>
+</FIELD>
+<FIELD ID="known_interstellar" name="known_interstellar" datatype="boolean">
+<DESCRIPTION>Known interstellar species</DESCRIPTION>
+</FIELD>
+<GROUP ID="Line" name="Line" utype="ssldm:Line">
+<DESCRIPTION>a description of the spectral line</DESCRIPTION>
+<FIELDref ref="title"/>
+<FIELDref ref="wavelength"/>
+</GROUP>
+<DATA>
+<TABLEDATA>
+<TR><TD>CDMS: FeCO N=14-13, J=13-12</TD><TD>CDMS</TD><TD>0.0026007539084712634</TD><TD>115271.3669</TD><TD>FeCO</TD><TD>Iron Monocarbonyl</TD><TD>FeCO</TD><TD>0</TD><TD>131.500969428903</TD><TD>-4.0613367645229</TD><TD>68.4088</TD><TD>72.25383892022529</TD><TD>98.42443753101489</TD><TD>103.956559027197</TD><TD></TD><TD>N=14-13, J=13-12</TD><TD>0</TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>
