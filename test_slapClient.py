@@ -4,9 +4,17 @@ from SlapClient import SlapClient
 
 class TestSlapClient(TestCase):
     def setUp(self):
-        self.Client = SlapClient("https://find.nrao.edu/splata-slap/slap")
+        self.Client = SlapClient("https://find.nrao.edu/splata-slap/slap",slap_version=1.0)
 
     def test_query(self):
+        input_basic = {
+            "wavelenght" :
+                     {
+                         "gte": 0.1,
+                         "lte": 0.5
+                     }
+                 }
+
         self.fail()
 
     def test_query_service(self):
